@@ -30,7 +30,13 @@
     "matches": [
       "https://www.npmjs.com/package/*"
     ],
-    "js": ["content.js"]
+    "js": ["content_npm.js"]
+  },
+  {
+    "matches": [
+      "https://github.com/*"
+    ],
+    "js": ["content_github.js"]
   }
 ]
 }

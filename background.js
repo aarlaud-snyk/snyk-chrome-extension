@@ -21,24 +21,24 @@ function createNotification(url, options, createdCallback) { // callback is opti
   });
 }
 
-function showVulnNotification(packageManager,packageName, vulnCount){
+function showVulnNotification(packageManager,packageName, packageVersion, vulnCount, snykTestUrl){
   var opt = {
       type:     'basic',
       iconUrl:  'snyk-avatar-notification.png',
-      title:    packageName+ ' is vulnerable !',
-      message:  'This package carries '+vulnCount+ ' known vuln(s)',
+      title:    packageName + ' ' + packageVersion,
+      message:  'This package carries '+vulnCount+ ' known issues',
       requireInteraction: true,
       priority: 0};
 
-      createNotification('https://snyk.io/test/'+packageManager+'/'+packageName, opt);
+      createNotification(snykTestUrl, opt);
 }
 
 function showSafeNotification(packageName){
   chrome.notifications.create({
       type:     'basic',
       iconUrl:  'snyk-avatar-notification.png',
-      title:    packageName+ ' is vulnerability free !',
-      message:  'Stay Secure !',
+      title:    packageName,
+      message:  'is vulnerability free !',
       requireInteraction: false,
       priority: 0});
 
@@ -51,12 +51,11 @@ function showSafeNotification(packageName){
     //             "from a content script:" + sender.tab.url :
     //             "from the extension");
 
-
+    var snykTestUrl = "https://snyk.io/test/"+request.source+'/'+ request.packageName+"/"+ request.packageVersion;
       //request.packageName
-
       var xhr = new XMLHttpRequest();
 
-      xhr.open("GET", "https://snyk.io/test/"+request.source+'/'+ request.packageName +"/badge.svg", false);
+      xhr.open("GET", snykTestUrl +"/badge.svg", false);
       xhr.send();
 
       var result = xhr.responseText;
@@ -66,6 +65,7 @@ function showSafeNotification(packageName){
       result = el.getElementsByClassName('header__title');
       var errorString = "";
       if (request.source == "npm") errorString = "Invalid npm package";
+
       if(result.length > 0 && result[0].textContent == errorString){
         return;
       }
@@ -73,7 +73,7 @@ function showSafeNotification(packageName){
       result = el.getElementsByTagName( 'text' );
       var nbOfVuln = result[result.length-1].textContent;
       if(parseInt(nbOfVuln) > 0){
-          showVulnNotification(request.source, request.packageName, nbOfVuln);
+          showVulnNotification(request.source, request.packageName, request.packageVersion, nbOfVuln, snykTestUrl);
       } else {
           showSafeNotification(request.packageName)
       }
