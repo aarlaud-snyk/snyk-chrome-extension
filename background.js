@@ -46,10 +46,6 @@ function showSafeNotification(packageName){
 
   chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
-    //
-    // alert(sender.tab ?
-    //             "from a content script:" + sender.tab.url :
-    //             "from the extension");
 
     var snykTestUrl = "https://snyk.io/test/"+request.source+'/'+ request.packageName+"/"+ request.packageVersion;
       //request.packageName
@@ -57,7 +53,9 @@ function showSafeNotification(packageName){
 
       xhr.open("GET", snykTestUrl +"/badge.svg", false);
       xhr.send();
-
+      if(xhr.status != 200){
+        return;
+      }
       var result = xhr.responseText;
       var el = document.createElement( 'html' );
       el.innerHTML = result;
