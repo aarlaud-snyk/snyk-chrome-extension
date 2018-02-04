@@ -9,5 +9,5 @@ setTimeout(function(){
   //console.log(document.getElementsByClassName("last-publisher")[0].parentNode.childNodes[3].childNodes[1].textContent);
 
 chrome.runtime.sendMessage({source: "npm", packageName: packageName, packageVersion: packageVersion}, function(response) {
-  //console.log(response);
-});}, 1000);
+  document.getElementsByClassName("package-name")[0].appendChild(getBadge(response.nbOfVuln, response.url, packageName, packageVersion));
+});}, 50);

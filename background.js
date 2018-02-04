@@ -27,7 +27,7 @@ function showVulnNotification(packageManager,packageName, packageVersion, vulnCo
       iconUrl:  'snyk-avatar-notification.png',
       title:    packageName + ' ' + packageVersion,
       message:  'This package carries '+vulnCount+ ' known issues',
-      requireInteraction: true,
+      requireInteraction: false,
       priority: 0};
 
       createNotification(snykTestUrl, opt);
@@ -75,6 +75,7 @@ function showSafeNotification(packageName){
       } else {
           showSafeNotification(request.packageName)
       }
+      sendResponse({nbOfVuln: nbOfVuln, url: snykTestUrl});
 
   });
   //
