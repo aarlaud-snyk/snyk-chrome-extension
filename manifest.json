@@ -3,7 +3,7 @@
 
   "name": "Snyk Chrome Extension",
   "description": "This extension allows the user to check the vulnerabilities for npm packages while visiting the package page on npmjs.",
-  "version": "1.0",
+  "version": "0.0.0.1",
 
   "background": {
     "scripts": ["background.js"],
@@ -19,7 +19,7 @@
     "activeTab",
     "notifications",
     "tabs",
-    "https://snyk.io/*"
+    "https://*/"
   ],
   "web_accessible_resources": [
     "snyk-avatar.png",

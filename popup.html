@@ -11,6 +11,9 @@
       body {
         margin: 10px;
         white-space: nowrap;
+        font-family: Prenton,"Gill Sans",Calibri,sans-serif;
+
+        text-align: left;
       }
 
       h1 {
@@ -22,6 +25,54 @@
         display: flex;
         justify-content: space-between;
         flex-direction: column;
+        align-items: flex-start;
+      }
+      #snykurl {
+        display: flex;
+        flex-direction: row;
+      }
+      #snykurl>div{
+        margin: 10px;
+      }
+      .btn a, button {
+        background-color: #0f8a8a;
+        background-image: linear-gradient(-180deg,#119a9a 0,#0f8383 100%);
+        border: 1px solid #0f8a8a;
+        border-bottom-color: #0e7c7c;
+        box-shadow: 0 1px 0 0 #0e7c7c, inset 0 0 0 1px rgba(255,255,255,.1);
+        color: #fff;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+        /* font-size: 2.125rem; */
+        font-weight: 400;
+        padding: 6px 14px 6px;
+        text-align: center;
+        text-decoration: none;
+        white-space: nowrap;
+
+        width: 100%;
+      }
+      input {
+        background-color: #fff;
+        border: 1px solid #77758a;
+        border-radius: 2px;
+        box-shadow: inset 1px 1px 0 rgba(119,117,138,.25);
+        color: #393842;
+        box-sizing: border-box;
+        display: block;
+        font-size: inherit;
+        font-weight: 400;
+        margin: 0;
+        max-height: 33px;
+        min-width: 3rem;
+        padding: .37rem .5rem .223rem;
+      }
+      .input-label{
+        font-size: 18px;
       }
     </style>
 
@@ -39,6 +90,12 @@
     <div id="container">
       <div>Automatically check vulnerability as you are looking at packages online (npm and github).</div>
       More at https://snyk.io
+      <div id="snykurl">
+        <div class="input-label" >Snyk instance url</div>
+        <div><input id="url" type="text" placeholder="snyk.io" value="snyk.io"></a></div>
+        <div><button id="save">save</button></div>
+        <div id="status"></div>
+      </div>
     </div>
   </body>
 </html>
