@@ -43,6 +43,12 @@
       "https://github.com/*"
     ],
     "js": ["content_github.js", "badge.js"]
+  },
+  {
+    "matches": [
+      "https://yarnpkg.com/*/package/*"
+    ],
+    "js": ["content_yarn.js"]
   }
 ]
 }
