@@ -1,24 +1,24 @@
 {
   "manifest_version": 2,
-
-  "name": "Snyk Chrome Extension",
-  "description": "This extension allows the user to check the vulnerabilities for npm packages while visiting the package page on npmjs.",
-  "version": "0.0.0.2",
-
+  "name": "Snyk Browser Extension",
+  "description": "This extension allows the user to check the vulnerabilities of GitHub repositories or javascript packages on npm/yarn",
+  "version": "0.0.2",
+  "homepage_url": "https://github.com/aarlaud-snyk/snyk-chrome-extension",
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "src/js/background.js"
+    ],
     "persistent": false
   },
-
   "browser_action": {
-    "default_icon": "snyk-avatar.png",
-    "default_popup": "popup.html",
+    "default_icon": "src/icons/snyk-avatar.png",
+    "default_popup": "src/popup.html",
     "default_title": "Snyk.io"
   },
   "icons": {
-    "16": "snyk-icon-16.png",
-    "48": "snyk-icon-48.png",
-    "128": "snyk-icon-128.png"
+    "16": "src/icons/snyk-icon-16.png",
+    "48": "src/icons/snyk-icon-48.png",
+    "128": "src/icons/snyk-icon-128.png"
   },
   "permissions": [
     "activeTab",
@@ -27,28 +27,36 @@
     "https://*/"
   ],
   "web_accessible_resources": [
-    "snyk-avatar.png",
-    "snyk-avatar-notification.png"
+    "src/icons/snyk-avatar.png",
+    "src/icons/snyk-avatar-notification.png"
   ],
   "content_scripts": [
-  {
-    "matches": [
-      "https://www.npmjs.com/package/*"
-    ],
-    "css": ["style.css"],
-    "js": ["content_npm.js", "badge.js"]
-  },
-  {
-    "matches": [
-      "https://github.com/*"
-    ],
-    "js": ["content_github.js", "badge.js"]
-  },
-  {
-    "matches": [
-      "https://yarnpkg.com/*/package/*"
-    ],
-    "js": ["content_yarn.js"]
-  }
-]
+    {
+      "matches": [
+        "https://www.npmjs.com/package/*"
+      ],
+      "js": [
+        "src/js/content/npm.js",
+        "src/js/badge.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://github.com/*"
+      ],
+      "js": [
+        "src/js/content/github.js",
+        "src/js/badge.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://yarnpkg.com/*/package/*"
+      ],
+      "js": [
+        "src/js/content/yarn.js",
+        "src/js/badge.js"
+      ]
+    }
+  ]
 }
