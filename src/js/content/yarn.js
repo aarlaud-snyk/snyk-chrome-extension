@@ -1,12 +1,13 @@
 const packageName = document.location.pathname.split('/package/')[1];
-const $readme = document.getElementById("readme");
+const $readme = document.getElementById('readme');
 const $anchor = document.createElement('a');
+const testPath = `https://snyk.io/test/npm/${packageName}`;
 
-$anchor.setAttribute('href', `https://snyk.io/test/npm/${packageName}`);
+$anchor.setAttribute('href', testPath);
 $anchor.innerHTML = `<div class="m-2"><img
-src="https://snyk.io/test/npm/${packageName}/badge.svg"
+src="${testPath}/badge.svg"
 alt="Known Vulnerabilities"
-data-canonical-src="https://snyk.io/test/npm/${packageName}"
+data-canonical-src="${testPath}"
 style="max-width:100%;"/></div>`;
 
 $readme.parentNode.insertBefore($anchor, $readme);

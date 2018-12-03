@@ -1,0 +1,34 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Snyk Chrome Extension</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+    -->
+    <script src="js/popup.js"></script>
+  </head>
+
+  <body>
+    <h1>Snyk Extension</h1>
+    <div id="container">
+      <div>Automatically check vulnerability as you are looking at packages online (npm and github).</div>
+      More at https://snyk.io
+      <div id="snykurl">
+        <div class="input-label" >Snyk instance url</div>
+        <div><input id="url" type="text" placeholder="snyk.io" value="snyk.io"></a></div>
+        <div><button id="save">save</button></div>
+        <div id="status"></div>
+      </div>
+    </div>
+  </body>
+</html>
