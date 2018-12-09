@@ -33,11 +33,12 @@
   "content_scripts": [
     {
       "matches": [
-        "https://www.npmjs.com/package/*"
+        "https://www.npmjs.com/package/*",
+        "https://www.npmjs.com/package/*/v/*"
       ],
       "js": [
-        "src/js/content/npm.js",
-        "src/js/badge.js"
+        "src/js/badge.js",
+        "src/js/content/npm.js"
       ]
     },
     {

@@ -1,4 +1,4 @@
-var snykurl = 'snyk.io';
+const snykurl = 'snyk.io';
 
 const browser = window.msBrowser || window.browser || window.chrome;
 
@@ -25,6 +25,20 @@ function showSafeNotification(packageName, packageVersion = null) {
     priority: 0,
   });
 }
+
+const isValidNpmPackagePage = (str) => {
+  const pattern = new RegExp(/^https:\/\/www.npmjs.com\/package\//);
+  return pattern.test(str);
+};
+
+browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
+  if (changeInfo.status === 'loading' && isValidNpmPackagePage(changeInfo.url)) {
+    chrome.tabs.sendMessage(tabId, {
+      message: 'client-side-navigation',
+      url: changeInfo.url,
+    });
+  }
+});
 
 browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
   if (request.source === 'getsnykurl') {
