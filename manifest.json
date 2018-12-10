@@ -24,11 +24,13 @@
     "activeTab",
     "notifications",
     "tabs",
-    "https://*/"
+    "https://*/",
+    "webNavigation"
   ],
   "web_accessible_resources": [
     "src/icons/snyk-avatar.png",
-    "src/icons/snyk-avatar-notification.png"
+    "src/icons/snyk-avatar-notification.png",
+    "src/js/snyk.js"
   ],
   "content_scripts": [
     {
@@ -56,6 +58,14 @@
       "js": [
         "src/js/content/yarn.js",
         "src/js/badge.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://app.snyk.io/org/*/project/*?tab=dependencies"
+      ],
+      "js": [
+        "src/js/content/snyk.js"
       ]
     }
   ]

@@ -1,6 +1,7 @@
 var snykurl = 'snyk.io';
 
 const browser = window.msBrowser || window.browser || window.chrome;
+const contentScripts = chrome.runtime.getManifest().content_scripts;
 
 function showVulnNotification(packageName, packageVersion, vulnCount) {
   var vulnerabilitiesPluralized = vulnCount > 1 ? 'vulnerabilities' : 'vulnerability';
@@ -25,6 +26,17 @@ function showSafeNotification(packageName, packageVersion = null) {
     priority: 0,
   });
 }
+
+
+
+// Adding listeners for client side navs
+chrome.webNavigation.onHistoryStateUpdated.addListener(() => {
+  chrome.tabs.executeScript({ file: 'src/js/content/snyk.js' });
+}, { url: [ { urlMatches: 'https://app.snyk.io/org/.+/project/.+\?.*tab=dependencies' } ] });
+
+chrome.webNavigation.onHistoryStateUpdated.addListener(() => {
+  chrome.tabs.executeScript({ file: 'src/js/content/npm.js' });
+}, { url: [ { urlMatches: 'https://www.npmjs.com/package/.+/*v*/*/*.+' } ] });
 
 browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
   if (request.source === 'getsnykurl') {
