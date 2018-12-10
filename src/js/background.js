@@ -1,7 +1,6 @@
 var snykurl = 'snyk.io';
 
 const browser = window.msBrowser || window.browser || window.chrome;
-const contentScripts = chrome.runtime.getManifest().content_scripts;
 
 function showVulnNotification(packageName, packageVersion, vulnCount) {
   var vulnerabilitiesPluralized = vulnCount > 1 ? 'vulnerabilities' : 'vulnerability';

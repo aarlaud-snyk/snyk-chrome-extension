@@ -1,5 +1,4 @@
 /* global getBadge */
-
 var packageName = document.location.pathname.split('/')[2];
 var packageVersion = document.location.pathname.split('/')[4] || 'latest';
 var testPath = `https://snyk.io/test/npm/${packageName}/${packageVersion}`;

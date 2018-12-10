@@ -29,8 +29,7 @@
   ],
   "web_accessible_resources": [
     "src/icons/snyk-avatar.png",
-    "src/icons/snyk-avatar-notification.png",
-    "src/js/snyk.js"
+    "src/icons/snyk-avatar-notification.png"
   ],
   "content_scripts": [
     {
