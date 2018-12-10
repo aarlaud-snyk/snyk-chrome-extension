@@ -58,6 +58,14 @@
         "src/js/content/yarn.js",
         "src/js/badge.js"
       ]
+    },
+    {
+      "matches": [
+        "https://app.snyk.io/org/*/project/*?tab=dependencies"
+      ],
+      "js": [
+        "src/js/content/snyk.js"
+      ]
     }
   ]
 }

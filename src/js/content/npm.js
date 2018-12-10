@@ -23,7 +23,7 @@ function processNpmPackage() {
 processNpmPackage();
 
 chrome.runtime.onMessage.addListener((data) => {
-  if (data.message && data.message === 'client-side-navigation') {
+  if (data.message && data.message === 'npm-client-side-navigation') {
     processNpmPackage();
   }
 });
