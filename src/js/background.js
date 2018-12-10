@@ -31,10 +31,21 @@ const isValidNpmPackagePage = (str) => {
   return pattern.test(str);
 };
 
+const isValidSnykDepTreePage = (str) => {
+  const pattern = new RegExp(/^https:\/\/app.snyk.io\/.+\/project\/.+\?.*tab=dependencies/);
+  return pattern.test(str);
+};
+
 browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.status === 'loading' && isValidNpmPackagePage(changeInfo.url)) {
     chrome.tabs.sendMessage(tabId, {
-      message: 'client-side-navigation',
+      message: 'npm-client-side-navigation',
+      url: changeInfo.url,
+    });
+  }
+  if (changeInfo.status === 'loading' && isValidSnykDepTreePage(changeInfo.url)) {
+    chrome.tabs.sendMessage(tabId, {
+      message: 'snyk-client-side-navigation',
       url: changeInfo.url,
     });
   }
