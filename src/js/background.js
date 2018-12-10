@@ -62,7 +62,15 @@ browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
     return true;
 
   } else {
-    const badgeRequest = fetch(request.testPath + '/badge.svg');
+    const badgeRequest = fetch('https://us-central1-snyk-browser-extension.cloudfunctions.net/badge', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: JSON.stringify({
+        url: request.testPath + '/badge.svg',
+      }),
+    });
 
     badgeRequest
       .then((response) => {
