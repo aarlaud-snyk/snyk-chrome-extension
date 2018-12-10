@@ -2,7 +2,7 @@ function processSnykDepTree() {
 
   var opened = true;
 
-  var toggleExpandCollapseTree = () => {
+  const toggleExpandCollapseTree = () => {
     for (var i=0; i<document.getElementsByClassName('tree__branch').length;i++) {
       if (opened) {
         document.getElementsByClassName('tree__branch')[i].setAttribute('open','open');
@@ -13,7 +13,7 @@ function processSnykDepTree() {
     opened = !opened;
   };
 
-  var hideAllBranches = () => {
+  const hideAllBranches = () => {
     const allBranches = document.getElementsByClassName('tree__branch');
     for (var j in allBranches) {
       if (allBranches[j].className && allBranches[j].className.indexOf('hidden') <0) {
@@ -22,7 +22,7 @@ function processSnykDepTree() {
     };
   };
 
-  var getParents = function (elem, selector) {
+  const getParents = function (elem, selector) {
 
     // Element.matches() polyfill
     if (!Element.prototype.matches) {
@@ -59,7 +59,7 @@ function processSnykDepTree() {
 
   };
 
-  var showAllBranches = () => {
+  const showAllBranches = () => {
     const allBranches = document.getElementsByClassName('tree__branch');
     for (var j in allBranches) {
       if (allBranches[j].className && allBranches[j].className.indexOf('hidden') >=0) {
@@ -68,7 +68,7 @@ function processSnykDepTree() {
     };
   };
 
-  var showSearchedBranches = (element) => {
+  const showSearchedBranches = (element) => {
     var parents = getParents(element, '.tree__branch');
     parents.forEach((parent) => {
       var hasNonHiddenChild = false;
