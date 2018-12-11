@@ -2,7 +2,7 @@
 function processNpmPackage() {
   const packageName = document.location.pathname.split('/')[2];
   const packageVersion = document.location.pathname.split('/')[4] || 'latest';
-  const testPath = `https://snyk.io/test/npm/${packageName}/${packageVersion}`;
+  const testPath = `/test/npm/${packageName}/${packageVersion}`;
 
   chrome.runtime.sendMessage({
     source: 'npm',

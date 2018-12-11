@@ -1,4 +1,5 @@
-const snykurl = 'snyk.io';
+var snykurl = 'snyk.io';
+var apiToken = '';
 
 const browser = window.msBrowser || window.browser || window.chrome;
 
@@ -53,55 +54,79 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
 
 browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
   if (request.source === 'getsnykurl') {
-    sendResponse({ url: snykurl });
+    sendResponse({ url: snykurl, apiToken });
+    console.log('getting '+snykurl);
   } else if (request.source === 'snykurl') {
-    snykurl = request.url;
+    console.log('saving '+request.url);
+    snykurl = request.url || 'snyk.io';
 
     var connectionTimeout = setTimeout(() => {
-      sendResponse({ status: 'fail' });
+      sendResponse({ status: 'Fail to connect to '+snykurl + '. Defaulting to snyk.io.' });
       snykurl = 'snyk.io';
       return;
     }, 3000);
-
-    fetch('https://'+snykurl +'/')
-      .then(
-        (response) => {
-          if (response.status !== 200) {
-            sendResponse({ status: 'fail' });
-            snykurl = 'snyk.io';
+    if (!request.url || !request.apiToken) {
+      snykurl = 'snyk.io';
+      apiToken = '';
+      sendResponse({ ok: true, status: 'Cleared !' });
+    } else {
+      fetch('https://'+snykurl +'/api/v1/',
+        { headers: {
+          'Authorization': 'token '+ request.apiToken,
+        },
+        })
+        .then(
+          (response) => {
+            if (response.status !== 200) {
+              sendResponse({ ok: false, status: 'Fail to connect '+response.status });
+              snykurl = 'snyk.io';
+              return;
+            }
+            // console.log("success");
+            clearTimeout(connectionTimeout);
+            snykurl = snykurl;
+            apiToken = request.apiToken;
+            sendResponse({ ok: true, status: 'success' });
             return;
+
           }
-          // console.log("success");
-          clearTimeout(connectionTimeout);
-          snykurl = snykurl;
-          sendResponse({ status: 'success' });
-
-          return;
-
-        }
-      )
-      .catch((err) => {
-        console.log(err);
-      // sendResponse({status: "fail"});
-      });
+        )
+        .catch((err) => {
+          console.log(err);
+          sendResponse({ ok: false, status: 'fail' });
+        });
+    }
     return true;
 
   } else {
-    const badgeRequest = fetch('https://us-central1-snyk-browser-extension.cloudfunctions.net/badge', {
+    var endpoint = 'https://us-central1-snyk-browser-extension.cloudfunctions.net/badge';
+    var url = 'https://'+snykurl + request.testPath + '/badge.svg';
+    var options = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json; charset=utf-8',
       },
       body: JSON.stringify({
-        url: request.testPath + '/badge.svg',
+        url,
       }),
-    });
+    };
+
+    if (snykurl !== 'snyk.io') {
+      endpoint = url; // Endpoint is same as url in onprem scenarios
+      options = {
+        headers: {
+          'access-control-allow-origin': '*',
+        },
+      };
+    }
+    const badgeRequest = fetch(endpoint, options);
 
     badgeRequest
       .then((response) => {
         return response.text();
       })
       .then((response) => {
+        console.log(response);
         const parse = new DOMParser();
         const doc = parse.parseFromString(response, 'image/svg+xml');
         const nbOfVuln = parseInt(doc.querySelectorAll('text')[3].innerHTML, 10);

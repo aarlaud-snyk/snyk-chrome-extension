@@ -1,7 +1,7 @@
 const packageName = document.location.pathname.split('/package/')[1];
 const $readme = document.getElementById('readme');
 const $anchor = document.createElement('a');
-const testPath = `https://snyk.io/test/npm/${packageName}`;
+const testPath = `/test/npm/${packageName}`;
 
 $anchor.setAttribute('href', testPath);
 $anchor.innerHTML = `<div class="m-2"><img
