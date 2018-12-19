@@ -11,10 +11,10 @@ if (parsedUrl && parsedUrl[1] && parsedUrl[2] && parsedUrl[3] === '') {
     source: 'github',
     packageName,
     testPath,
-  }, () => {
+  }, (data) => {
     const $anchor = document.createElement('a');
-    $anchor.setAttribute('href', `${testPath}`);
-    $anchor.innerHTML = getBadge(testPath);
+    $anchor.setAttribute('href', data.snykHostname+`${testPath}`);
+    $anchor.innerHTML = getBadge(data.snykHostname+testPath);
 
     document
       .querySelector('#readme article h1')

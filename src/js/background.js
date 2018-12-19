@@ -1,5 +1,6 @@
 var snykurl = 'snyk.io';
 var apiToken = '';
+var userOrgs = [];
 
 const browser = window.msBrowser || window.browser || window.chrome;
 
@@ -37,6 +38,71 @@ const isValidSnykDepTreePage = (str) => {
   return pattern.test(str);
 };
 
+const getUserOrgs = (snykHostname, apiToken) => {
+  fetch('https://'+snykurl +'/api/v1/orgs',
+    { headers: {
+      'Content-type': 'application/json',
+      'Authorization': 'token '+ apiToken,
+    },
+    })
+    .then((response) => {
+      return response.text();
+    })
+    .then(
+      (response) => {
+        const responseJSON = JSON.parse(response);
+        for (var i=0; i<responseJSON.orgs.length; i++) {
+          userOrgs.push({ id: responseJSON.orgs[i].id, name:responseJSON.orgs[i].name });
+        }
+        return;
+      }
+    )
+    .catch((err) => {
+      console.log(err);
+    });
+};
+const showDepUsageCountInPage = (count, orgName) => {
+
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, {
+      message: 'dep-usage-in-org',
+      orgName,
+      count,
+    });
+  });
+
+
+};
+
+const getDependencyUsageInOrgs = (dependencyName, dependencyVersion, orgsArray) => {
+  const orgData=orgsArray[0];
+  fetch('https://'+snykurl +'/api/v1/org/'+orgData.id+'/dependencies',
+    { method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': 'token '+ apiToken,
+      },
+      body: `{ "filters": { "dependencies": ["${dependencyName}@${dependencyVersion}"]}}`,
+    })
+    .then((response) => {
+      return response.text();
+    })
+    .then(
+      (response) => {
+        var count = 0;
+        const responseJSON = JSON.parse(response);
+        if (responseJSON.results && responseJSON.results.length > 0) {
+          count = responseJSON.results[0].projects.length;
+          showDepUsageCountInPage(count, orgData.name);
+        }
+        return;
+      }
+    )
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
 browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
   if (changeInfo.status === 'loading' && isValidNpmPackagePage(changeInfo.url)) {
     chrome.tabs.sendMessage(tabId, {
@@ -55,9 +121,7 @@ browser.tabs.onUpdated.addListener((tabId, changeInfo) => {
 browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
   if (request.source === 'getsnykurl') {
     sendResponse({ url: snykurl, apiToken });
-    console.log('getting '+snykurl);
   } else if (request.source === 'snykurl') {
-    console.log('saving '+request.url);
     snykurl = request.url || 'snyk.io';
 
     var connectionTimeout = setTimeout(() => {
@@ -86,6 +150,7 @@ browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
             clearTimeout(connectionTimeout);
             snykurl = snykurl;
             apiToken = request.apiToken;
+            getUserOrgs(snykurl, apiToken);
             sendResponse({ ok: true, status: 'success' });
             return;
 
@@ -120,13 +185,11 @@ browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
       };
     }
     const badgeRequest = fetch(endpoint, options);
-
     badgeRequest
       .then((response) => {
         return response.text();
       })
       .then((response) => {
-        console.log(response);
         const parse = new DOMParser();
         const doc = parse.parseFromString(response, 'image/svg+xml');
         const nbOfVuln = parseInt(doc.querySelectorAll('text')[3].innerHTML, 10);
@@ -137,5 +200,9 @@ browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
           showSafeNotification(request.packageName, request.packageVersion);
         }
       });
+    sendResponse({ 'snykHostname': 'https://'+snykurl });
+    if (apiToken) {
+      getDependencyUsageInOrgs('body-parser','1.9.0', userOrgs);
+    }
   }
 });
