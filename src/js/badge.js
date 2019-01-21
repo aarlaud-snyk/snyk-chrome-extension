@@ -1,8 +1,9 @@
 /* eslint no-unused-vars:0 */
-function getBadge(testPath) {
+function getBadge(testUrl) {
   return `<img
-    src="${testPath}/badge.svg"
+    id="snyk-badge"
+    src="${testUrl}/badge.svg"
     alt="Known Vulnerabilities"
-    data-canonical-src="${testPath}"
+    data-canonical-src="${testUrl}"
     style="max-width:100%;"/>`;
 }
